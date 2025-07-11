@@ -1,0 +1,32 @@
+model_type: llm
+
+# base_model: distilgpt2
+# base_model: mistralai/Mistral-7B-v0.1
+base_model: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+
+adapter:
+  type: lora
+  output_dir: /mnt/
+
+input_features:
+  - name: inputs
+    type: text
+
+output_features:
+  - name: output
+    type: text
+
+prompt:
+  template: |
+    {inputs}
+
+trainer:
+  type: finetune
+  max_sequence_length: 128
+  epochs: 10
+  batch_size: 2
+  learning_rate: 0.00005
+
+
+generation:
+  max_new_tokens: 64

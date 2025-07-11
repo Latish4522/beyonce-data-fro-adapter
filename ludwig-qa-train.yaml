@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ludwig-trainer
+  namespace: manjeeth
+spec:
+  template:
+    spec:
+      containers:
+      - name: ludwig
+        image: ludwigai/ludwig:latest
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          set -e
+          echo "🔧 Installing huggingface_hub..."
+          pip install --no-cache-dir huggingface_hub
+
+          echo "🚀 Running Ludwig training on beyonce-adapter dataset..."
+          ludwig train --config /mnt/ludwig_config.yaml --dataset /mnt/output.jsonl --output_directory /mnt/
+
+          echo "⬆️ Uploading adapters to HuggingFace..."
+          python /mnt/upload_to_hf.py
+        env:
+        - name: HF_TOKEN
+          value: "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"
+        volumeMounts:
+        - name: manjeeth-folder
+          mountPath: /mnt
+      restartPolicy: Never
+      volumes:
+      - name: manjeeth-folder
+        hostPath:
+          path: /home/latish/adapter-training/beyonce-adapter
+          type: Directory
+  backoffLimit: 1 
