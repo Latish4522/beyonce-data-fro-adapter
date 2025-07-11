@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ludwig-trainer
-  namespace: manjeeth
+  namespace: latish
 spec:
   template:
     spec:
@@ -23,13 +23,13 @@ spec:
           python /mnt/upload_to_hf.py
         env:
         - name: HF_TOKEN
-          value: "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"
+          value: ""
         volumeMounts:
-        - name: manjeeth-folder
+        - name: folder
           mountPath: /mnt
       restartPolicy: Never
       volumes:
-      - name: manjeeth-folder
+      - name: folder
         hostPath:
           path: /home/latish/adapter-training/beyonce-adapter
           type: Directory
